@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from .models import Notes
 from . import db
+import json
 
 views = Blueprint('views', __name__)
 
@@ -30,3 +31,16 @@ def notes():
     db.session.add(new_note)
     db.session.commit()
   return render_template('notes.html', notes=notes)
+
+@views.route('/delete-note', methods=['POST'])
+def delete_note():
+  note = json.loads(request.data)
+  noteId = note['noteId']
+  note = Notes.query.get(noteId)
+
+  if note:
+    db.session.delete(note)
+    db.session.commit()
+
+  return jsonify({})
+  
