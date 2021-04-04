@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+from .models import Notes
+from . import db
 
 views = Blueprint('views', __name__)
 
@@ -16,6 +18,15 @@ def about_me():
 def contact():
   return '<h1> Hello World Contact </h1>'
 
-@views.route('/notes')
+@views.route('/notes', methods=['GET', 'POST'])
 def notes():
-  return render_template('notes.html')
+  notes = Notes.query
+
+  if request.method == 'POST':
+    note = request.form.get('note')
+
+    new_note = Notes(data=note)
+
+    db.session.add(new_note)
+    db.session.commit()
+  return render_template('notes.html', notes=notes)

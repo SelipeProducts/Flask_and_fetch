@@ -9,7 +9,7 @@ def create_app():
   app = Flask(__name__)
   app.config['SECRETE_KEY'] = '12345678'
   
-  app.config['SQL_ALCHEMY_URI'] = f'sqlite:///{DB_NAME}'
+  app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
   db.init_app(app)
 
   from .views import views
@@ -18,6 +18,8 @@ def create_app():
 
   from .models import Notes 
 
+  create_databse(app)
+  
   return app
 
 def create_databse(app):
